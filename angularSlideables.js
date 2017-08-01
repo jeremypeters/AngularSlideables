@@ -26,14 +26,24 @@ angular.module('angularSlideables', [])
     return {
         restrict: 'A',
         link: function(scope, element, attrs) {
-            var target, content;
-            
+            var target, content, targetParent;
+
             attrs.expanded = false;
-            
+
             element.bind('click', function() {
                 if (!target) target = document.querySelector(attrs.slideToggle);
                 if (!content) content = target.querySelector('.slideable_content');
-                
+
+                targetParent = angular.element(target).parent();
+
+                target.addEventListener('transitionend',function() {
+                    if (attrs.expanded) {
+                        targetParent.addClass("expanded");
+                    } else {
+                        targetParent.removeClass("expanded");
+                    }
+                });
+
                 if(!attrs.expanded) {
                     content.style.border = '1px solid rgba(0,0,0,0)';
                     var y = content.clientHeight;
